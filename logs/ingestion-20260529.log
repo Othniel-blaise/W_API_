@@ -1,0 +1,71 @@
+[2026-05-29 17:09:43 INF] Accès écriture OK : C:\Test\AQManager\Docs
+[2026-05-29 17:09:45 INF] Colonnes NOT NULL dans Documents : Description, DocumentCategoryID, Position, CreatedDate, CreatedBy, ModifiedDate, ModifiedBy, Disabled, IsSystem, Sites
+[2026-05-29 17:09:45 INF] Worker en arrière-plan désactivé (EnableBackgroundWorker=false).
+[2026-05-29 17:10:13 INF] HTTP GET /index.html responded 200 in 53.8822 ms
+[2026-05-29 17:10:13 INF] HTTP POST /hubs/logs/negotiate responded 200 in 20.5626 ms
+[2026-05-29 17:10:13 INF] HTTP GET /favicon.ico responded 404 in 1.2828 ms
+[2026-05-29 17:10:14 INF] Tesseract initialisé — langues : fra+eng, tessdata : C:\tessdata
+[2026-05-29 17:10:14 INF] HTTP GET /api/health responded 200 in 1080.8045 ms
+[2026-05-29 17:10:43 INF] HTTP GET /api/health responded 200 in 20.2018 ms
+[2026-05-29 17:11:13 INF] HTTP GET /api/health responded 200 in 135.9959 ms
+[2026-05-29 17:11:43 INF] HTTP GET /api/health responded 200 in 121.6503 ms
+[2026-05-29 17:12:13 INF] HTTP GET /api/health responded 200 in 10.6871 ms
+[2026-05-29 17:12:43 INF] HTTP GET /api/health responded 200 in 130.4230 ms
+[2026-05-29 17:13:13 INF] HTTP GET /api/health responded 200 in 5.5918 ms
+[2026-05-29 17:13:43 INF] HTTP GET /api/health responded 200 in 126.4821 ms
+[2026-05-29 17:14:13 INF] HTTP GET /api/health responded 200 in 11.4099 ms
+[2026-05-29 17:14:19 INF] === DÉBUT LOT 029200DF — 3 fichier(s) à traiter ===
+[2026-05-29 17:14:19 INF] --- Traitement : 000006-002-01005855632-FACTURES-BIACISA.PDF
+[2026-05-29 17:14:43 INF] HTTP GET /api/health responded 200 in 112.0062 ms
+[2026-05-29 17:15:13 INF] HTTP GET /api/health responded 200 in 5.0180 ms
+[2026-05-29 17:15:43 INF] HTTP GET /api/health responded 200 in 98.5089 ms
+[2026-05-29 17:16:02 INF]   [TEXTE PDF] Numéro : BC-25-00961 | Type : Bon de commande
+[2026-05-29 17:16:02 INF]   Numéro : BC-25-00961 | Type : Bon de commande | Table : AQManagerData.PurchaseOrders,AQManagerData
+[2026-05-29 17:16:02 INF]   RecordID=1128 (colonne 'PONumber', site=1)
+[2026-05-29 17:16:03 INF]   ✓ Rattaché : 000006-002-01005855632-FACTURES-BIACISA.PDF → Documents.ID liée à AQManagerData.PurchaseOrders,AQManagerData #1128
+[2026-05-29 17:16:03 INF] --- Traitement : 000007-002-01005855633-FACTURES-CIE.PDF
+[2026-05-29 17:16:11 WRN] Numéro de référence non détecté (ni nom fichier, ni texte) : 000007-002-01005855633-FACTURES-CIE.PDF
+[2026-05-29 17:16:11 INF] --- Traitement : 000007-002-01005855634-FACTURES-SANYHEAVYINDUSTRIES.PDF
+[2026-05-29 17:16:13 INF] HTTP GET /api/health responded 200 in 9.1319 ms
+[2026-05-29 17:16:33 INF]   [TEXTE PDF] Numéro : TO/BC-26-00316 | Type : Bon de commande
+[2026-05-29 17:16:33 INF]   Numéro : TO/BC-26-00316 | Type : Bon de commande | Table : AQManagerData.PurchaseOrders,AQManagerData
+[2026-05-29 17:16:33 INF]   RecordID=4919 (colonne 'PONumber', site=2)
+[2026-05-29 17:16:33 INF]   ✓ Rattaché : 000007-002-01005855634-FACTURES-SANYHEAVYINDUSTRIES.PDF → Documents.ID liée à AQManagerData.PurchaseOrders,AQManagerData #4919
+[2026-05-29 17:16:33 INF] 
+╔══════════════════════════════════════════════════════════════╗
+║              RÉCAPITULATIF LOT 029200DF                     ║
+╠══════════════════════════════════════════════════════════════╣
+║  Traités   : 3                                              ║
+║  Rattachés : 2                                              ║
+║  Doublons  : 0                                              ║
+║  À vérifier: 1                                              ║
+║  Erreurs   : 0                                              ║
+╚══════════════════════════════════════════════════════════════╝
+[2026-05-29 17:16:33 INF] HTTP POST /api/ingestion/run responded 200 in 134662.2217 ms
+[2026-05-29 17:16:43 INF] HTTP GET /api/health responded 200 in 96.6279 ms
+[2026-05-29 17:17:13 INF] HTTP GET /api/health responded 200 in 66.9252 ms
+[2026-05-29 17:17:43 INF] HTTP GET /api/health responded 200 in 7.1190 ms
+[2026-05-29 17:18:13 INF] HTTP GET /api/health responded 200 in 75.7853 ms
+[2026-05-29 17:18:43 INF] HTTP GET /api/health responded 200 in 5.2323 ms
+[2026-05-29 17:19:13 INF] HTTP GET /api/health responded 200 in 141.4328 ms
+[2026-05-29 17:19:43 INF] HTTP GET /api/health responded 200 in 8.9963 ms
+[2026-05-29 17:20:13 INF] HTTP GET /api/health responded 200 in 120.2812 ms
+[2026-05-29 17:20:43 INF] HTTP GET /api/health responded 200 in 13.7571 ms
+[2026-05-29 17:21:13 INF] HTTP GET /api/health responded 200 in 143.0287 ms
+[2026-05-29 17:21:43 INF] HTTP GET /api/health responded 200 in 8.9090 ms
+[2026-05-29 17:22:13 INF] HTTP GET /api/health responded 200 in 124.3201 ms
+[2026-05-29 17:22:44 INF] HTTP GET /api/health responded 200 in 58.5510 ms
+[2026-05-29 17:23:14 INF] HTTP GET /api/health responded 200 in 7.2053 ms
+[2026-05-29 17:24:47 INF] HTTP GET /api/health responded 200 in 143.5892 ms
+[2026-05-29 17:50:55 INF] Accès écriture OK : C:\Test\AQManager\Docs
+[2026-05-29 17:50:55 INF] Colonnes NOT NULL dans Documents : Description, DocumentCategoryID, Position, CreatedDate, CreatedBy, ModifiedDate, ModifiedBy, Disabled, IsSystem, Sites
+[2026-05-29 17:50:55 INF] Worker en arrière-plan désactivé (EnableBackgroundWorker=false).
+[2026-05-29 17:50:59 INF] Tesseract initialisé — langues : fra+eng, tessdata : C:\tessdata
+[2026-05-29 17:50:59 INF] HTTP GET /api/health responded 200 in 1044.4992 ms
+[2026-05-29 17:51:13 INF] HTTP GET /api/health responded 200 in 93.1777 ms
+[2026-05-29 17:51:37 INF] HTTP GET /index.html responded 200 in 48.4651 ms
+[2026-05-29 17:51:37 INF] HTTP GET /api/health responded 200 in 9.6180 ms
+[2026-05-29 17:51:37 INF] HTTP POST /hubs/logs/negotiate responded 200 in 18.1264 ms
+[2026-05-29 17:56:37 INF] HTTP GET /api/health responded 200 in 146.6825 ms
+[2026-05-29 18:01:37 INF] HTTP GET /api/health responded 200 in 119.8528 ms
+[2026-05-29 18:05:41 INF] HTTP GET /hubs/logs responded 101 in 843821.2610 ms

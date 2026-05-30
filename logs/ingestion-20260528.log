@@ -1,0 +1,78 @@
+[2026-05-28 23:02:41 INF] Accès écriture OK : C:\AQManagerWeb\Docs
+[2026-05-28 23:02:52 WRN] Impossible de lire INFORMATION_SCHEMA — connexion SQL à vérifier.
+Microsoft.Data.SqlClient.SqlException (0x80131904): Impossible d'ouvrir la base de données "AQManagerData" demandée par la connexion. La connexion a échoué.
+Échec de l'ouverture de session de l'utilisateur 'DESKTOP-V5SSGKR\LRA-HP094'.
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.CompleteLogin(Boolean enlistOK)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, DbConnectionPoolGroupProviderInfo providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, IDbConnectionPool pool, Func`3 accessTokenCallback, SspiContextProvider sspiContextProvider)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionPoolGroupProviderInfo poolGroupProviderInfo, IDbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreatePooledConnection(DbConnection owningConnection, IDbConnectionPool pool, DbConnectionPoolKey poolKey, DbConnectionOptions options, DbConnectionOptions userOptions)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 433
+   at W_API.Infrastructure.Data.AqManagerRepository.GetNotNullColumnsAsync(String tableName) in C:\Users\LRA-HP094\Documents\W_API\W_API.Infrastructure\Data\AqManagerRepository.cs:line 143
+   at W_API.Infrastructure.Data.AqManagerRepository.GetNotNullColumnsAsync(String tableName) in C:\Users\LRA-HP094\Documents\W_API\W_API.Infrastructure\Data\AqManagerRepository.cs:line 143
+   at Program.<Main>$(String[] args) in C:\Users\LRA-HP094\Documents\W_API\W_API.Api\Program.cs:line 73
+ClientConnectionId :b82cfeab-c969-49e0-ad05-7453c7dae3fe
+Error Number :4060,State :1,Class :11
+[2026-05-28 23:02:52 INF] Worker en arrière-plan désactivé (EnableBackgroundWorker=false).
+[2026-05-28 23:08:09 INF] Accès écriture OK : C:\AQManagerWeb\Docs
+[2026-05-28 23:08:19 WRN] Impossible de lire INFORMATION_SCHEMA — connexion SQL à vérifier.
+Microsoft.Data.SqlClient.SqlException (0x80131904): Impossible d'ouvrir la base de données "AQManagerData" demandée par la connexion. La connexion a échoué.
+Échec de l'ouverture de session de l'utilisateur 'DESKTOP-V5SSGKR\LRA-HP094'.
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.CompleteLogin(Boolean enlistOK)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, TimeoutTimer timeout, Boolean withFailover)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
+   at Microsoft.Data.SqlClient.Connection.SqlConnectionInternal..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, DbConnectionPoolGroupProviderInfo providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, IDbConnectionPool pool, Func`3 accessTokenCallback, SspiContextProvider sspiContextProvider)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionPoolGroupProviderInfo poolGroupProviderInfo, IDbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreatePooledConnection(DbConnection owningConnection, IDbConnectionPool pool, DbConnectionPoolKey poolKey, DbConnectionOptions options, DbConnectionOptions userOptions)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   at Microsoft.Data.SqlClient.ConnectionPool.WaitHandleDbConnectionPool.WaitForPendingOpen()
+--- End of stack trace from previous location ---
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command) in /_/Dapper/SqlMapper.Async.cs:line 433
+   at W_API.Infrastructure.Data.AqManagerRepository.GetNotNullColumnsAsync(String tableName) in C:\Users\LRA-HP094\Documents\W_API\W_API.Infrastructure\Data\AqManagerRepository.cs:line 143
+   at W_API.Infrastructure.Data.AqManagerRepository.GetNotNullColumnsAsync(String tableName) in C:\Users\LRA-HP094\Documents\W_API\W_API.Infrastructure\Data\AqManagerRepository.cs:line 143
+   at Program.<Main>$(String[] args) in C:\Users\LRA-HP094\Documents\W_API\W_API.Api\Program.cs:line 73
+ClientConnectionId :f5f87c0b-e353-488b-93f1-c7e4b2546115
+Error Number :4060,State :1,Class :11
+[2026-05-28 23:08:19 INF] Worker en arrière-plan désactivé (EnableBackgroundWorker=false).
+[2026-05-28 23:19:14 INF] Accès écriture OK : C:\AQManagerWeb\Docs
+[2026-05-28 23:19:14 INF] Colonnes NOT NULL dans Documents : Description, DocumentCategoryID, Position, CreatedDate, CreatedBy, ModifiedDate, ModifiedBy, Disabled, IsSystem, Sites
+[2026-05-28 23:19:14 INF] Worker en arrière-plan désactivé (EnableBackgroundWorker=false).
+[2026-05-28 23:22:21 WRN] Impossible d'initialiser Tesseract — OCR désactivé. Vérifiez TessDataPath (C:\tessdata) et les fichiers .traineddata (fra+eng).
+Tesseract.TesseractException: Failed to initialise tesseract engine.. See https://github.com/charlesw/tesseract/wiki/Error-1 for details.
+   at Tesseract.TesseractEngine.Initialise(String datapath, String language, EngineMode engineMode, IEnumerable`1 configFiles, IDictionary`2 initialValues, Boolean setOnlyNonDebugVariables)
+   at Tesseract.TesseractEngine..ctor(String datapath, String language, EngineMode engineMode, IEnumerable`1 configFiles, IDictionary`2 initialOptions, Boolean setOnlyNonDebugVariables)
+   at Tesseract.TesseractEngine..ctor(String datapath, String language, EngineMode engineMode)
+   at W_API.Infrastructure.Ocr.OcrEngine.TryInitEngine() in C:\Users\LRA-HP094\Documents\W_API\W_API.Infrastructure\Ocr\OcrEngine.cs:line 29
+[2026-05-28 23:22:21 INF] === DÉBUT LOT 4B09EB50 — 1 fichier(s) à traiter ===
+[2026-05-28 23:22:21 INF] --- Traitement : BL (1).pdf
+[2026-05-28 23:22:22 ERR] OCR demandé mais Tesseract non disponible pour : BL (1).pdf
+[2026-05-28 23:22:22 WRN] Confiance OCR insuffisante (0.0%) : BL (1).pdf → dossier _a_verifier
+[2026-05-28 23:22:22 INF] 
+╔══════════════════════════════════════════════════════════════╗
+║              RÉCAPITULATIF LOT 4B09EB50                     ║
+╠══════════════════════════════════════════════════════════════╣
+║  Traités   : 1                                              ║
+║  Rattachés : 0                                              ║
+║  Doublons  : 0                                              ║
+║  À vérifier: 1                                              ║
+║  Erreurs   : 0                                              ║
+╚══════════════════════════════════════════════════════════════╝
+[2026-05-28 23:22:22 INF] HTTP POST /api/ingestion/run responded 200 in 1417.2620 ms

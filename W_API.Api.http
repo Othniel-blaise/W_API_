@@ -1,0 +1,32 @@
+@W_API.Api_HostAddress = http://localhost:5179
+
+### Vérification santé (SQL, Docs folder, OCR)
+GET {{W_API.Api_HostAddress}}/api/health
+Accept: application/json
+
+###
+
+### Lancer le traitement par lot (lit MaxFilesPerRun PDF depuis InputFolder)
+POST {{W_API.Api_HostAddress}}/api/ingestion/run
+Accept: application/json
+
+###
+
+### Traiter un seul fichier PDF (remplacer le chemin)
+# POST {{W_API.Api_HostAddress}}/api/ingestion/file
+# Content-Type: multipart/form-data; boundary=boundary
+#
+# --boundary
+# Content-Disposition: form-data; name="file"; filename="BC-26-00001.pdf"
+# Content-Type: application/pdf
+#
+# < C:\Users\LRA-HP094\Downloads\ENTREE\BC-26-00001.pdf
+# --boundary--
+
+###
+
+### État d'un lot (remplacer BATCHID par la valeur retournée par /run)
+# GET {{W_API.Api_HostAddress}}/api/ingestion/status/BATCHID
+# Accept: application/json
+
+###

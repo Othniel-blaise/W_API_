@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>W_API — Ingestion AQManager</title>
+  <script src="https://unpkg.com/@microsoft/signalr@8.0.0/dist/browser/signalr.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface2: #273344;
+      --border: #334155;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --cyan: #22d3ee;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --purple: #a78bfa;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 0.5px;
+    }
+    header h1 span { color: var(--text-muted); font-weight: 400; font-size: 14px; margin-left: 8px; }
+    #health-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      display: inline-block; margin-right: 6px;
+      background: var(--yellow);
+    }
+    #health-dot.ok { background: var(--green); animation: pulse 2s infinite; }
+    #health-dot.err { background: var(--red); }
+    @keyframes pulse {
+      0%,100% { opacity:1; } 50% { opacity:.4; }
+    }
+    #health-label { font-size: 12px; color: var(--text-muted); }
+
+    /* ── Layout ── */
+    main { display: grid; grid-template-columns: 340px 1fr; gap: 16px; padding: 16px; height: calc(100vh - 57px); }
+
+    /* ── Left Panel ── */
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+    .panel h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 14px; }
+
+    /* Stats */
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+    .stat-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .stat-card .val { font-size: 28px; font-weight: 700; line-height: 1; }
+    .stat-card .lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+    .stat-card.total .val  { color: var(--blue); }
+    .stat-card.ok    .val  { color: var(--green); }
+    .stat-card.dup   .val  { color: var(--purple); }
+    .stat-card.warn  .val  { color: var(--yellow); }
+    .stat-card.err   .val  { color: var(--red); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px; border-radius: 6px; border: none;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: opacity .15s, transform .1s;
+      width: 100%; justify-content: center; margin-bottom: 8px;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-primary { background: var(--cyan); color: #0f172a; }
+    .btn-primary:hover:not(:disabled) { opacity: .85; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover:not(:disabled) { border-color: var(--cyan); color: var(--cyan); }
+    .btn-danger { background: #7f1d1d; color: var(--red); border: 1px solid #b91c1c; }
+    .btn-danger:hover:not(:disabled) { background: #991b1b; }
+
+    /* Spinner */
+    .spinner {
+      width: 14px; height: 14px; border: 2px solid transparent;
+      border-top-color: currentColor; border-radius: 50%;
+      animation: spin .6s linear infinite; display: none;
+    }
+    .loading .spinner { display: block; }
+    .loading .btn-icon { display: none; }
+
+    /* Upload zone */
+    .upload-zone {
+      border: 2px dashed var(--border); border-radius: 6px;
+      padding: 16px; text-align: center; cursor: pointer;
+      color: var(--text-muted); font-size: 12px;
+      transition: border-color .2s, color .2s;
+      margin-bottom: 8px;
+    }
+    .upload-zone:hover, .upload-zone.drag { border-color: var(--cyan); color: var(--cyan); }
+    .upload-zone input { display: none; }
+    #upload-name { font-size: 11px; color: var(--green); margin-top: 4px; min-height: 14px; }
+
+    /* Config info */
+    .config-item { display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .config-item:last-child { border-bottom: none; }
+    .config-item .key { color: var(--text-muted); }
+    .config-item .val { color: var(--cyan); font-family: monospace; font-size: 11px;
+      max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .config-item .val.ok  { color: var(--green); }
+    .config-item .val.err { color: var(--red); }
+
+    /* ── Right Panel — Terminal ── */
+    .right-panel { display: flex; flex-direction: column; gap: 0; }
+
+    .terminal-header {
+      background: #0d1117; border: 1px solid var(--border);
+      border-bottom: none; border-radius: 8px 8px 0 0;
+      padding: 8px 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .terminal-title { font-size: 12px; color: var(--text-muted); margin-left: 4px; flex: 1; }
+    .terminal-actions { display: flex; gap: 8px; }
+    .terminal-btn {
+      font-size: 11px; padding: 3px 8px; border-radius: 4px;
+      border: 1px solid var(--border); background: var(--surface2);
+      color: var(--text-muted); cursor: pointer;
+    }
+    .terminal-btn:hover { color: var(--text); border-color: var(--cyan); }
+
+    #log-terminal {
+      background: #0d1117; border: 1px solid var(--border);
+      border-top: none; border-radius: 0 0 8px 8px;
+      flex: 1; overflow-y: auto; padding: 12px 16px;
+      font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 12.5px;
+      line-height: 1.6;
+    }
+    .log-line { display: flex; gap: 8px; margin-bottom: 1px; }
+    .log-ts { color: #475569; min-width: 60px; }
+    .log-lvl { min-width: 36px; font-weight: 700; }
+    .log-msg { color: #cbd5e1; word-break: break-word; }
+    .log-line.INF    .log-lvl { color: var(--cyan); }
+    .log-line.WRN    .log-lvl { color: var(--yellow); }
+    .log-line.WRN    .log-msg { color: var(--yellow); }
+    .log-line.ERR    .log-lvl { color: var(--red); }
+    .log-line.ERR    .log-msg { color: var(--red); }
+    .log-line.success .log-msg { color: var(--green); font-weight: 600; }
+    .log-line.summary .log-msg { color: var(--cyan); font-family: monospace; }
+    .log-line.sep     .log-msg { color: #334155; }
+
+    /* Results table */
+    .results-section { margin-top: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+    .results-header { padding: 10px 16px; border-bottom: 1px solid var(--border);
+      font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
+      display: flex; justify-content: space-between; align-items: center; }
+    #batch-id-label { font-family: monospace; color: var(--purple); font-size: 13px; font-weight: 700; }
+    #results-table { width: 100%; border-collapse: collapse; }
+    #results-table th {
+      text-align: left; padding: 8px 12px; font-size: 11px;
+      text-transform: uppercase; color: var(--text-muted);
+      border-bottom: 1px solid var(--border); background: var(--surface2);
+    }
+    #results-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); font-size: 12px; }
+    #results-table tr:last-child td { border-bottom: none; }
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 9999px;
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+    }
+    .badge.rattache  { background: #14532d; color: var(--green); }
+    .badge.doublon   { background: #3b0764; color: var(--purple); }
+    .badge.a_verifier{ background: #451a03; color: var(--yellow); }
+    .badge.erreur    { background: #450a0a; color: var(--red); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <h1>W_API <span>— Ingestion Documents AQManager</span></h1>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span id="health-dot"></span>
+    <span id="health-label">Vérification...</span>
+  </div>
+</header>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- ── Left Panel ── -->
+  <div style="display:flex;flex-direction:column;gap:12px;overflow-y:auto;">
+
+    <!-- Stats -->
+    <div class="panel">
+      <h2>Dernier lot</h2>
+      <div class="stats">
+        <div class="stat-card total"><div class="val" id="s-total">—</div><div class="lbl">Traités</div></div>
+        <div class="stat-card ok">  <div class="val" id="s-rattaches">—</div><div class="lbl">Rattachés</div></div>
+        <div class="stat-card dup"> <div class="val" id="s-doublons">—</div><div class="lbl">Doublons</div></div>
+        <div class="stat-card warn"><div class="val" id="s-averifier">—</div><div class="lbl">À vérifier</div></div>
+        <div class="stat-card err" style="grid-column:1/-1;">
+          <div class="val" id="s-erreurs">—</div><div class="lbl">Erreurs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="panel">
+      <h2>Actions</h2>
+
+      <button class="btn btn-primary" id="btn-run" onclick="runBatch()">
+        <span class="btn-icon">▶</span>
+        <span class="spinner"></span>
+        Lancer le traitement
+      </button>
+
+      <div style="margin:12px 0;border-top:1px solid var(--border);"></div>
+
+      <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleDrop(event)">
+        <input type="file" id="file-input" accept=".pdf" onchange="handleFileSelect(event)">
+        <div>📄 Déposer un PDF ou cliquer pour choisir</div>
+        <div id="upload-name"></div>
+      </div>
+      <button class="btn btn-secondary" id="btn-upload" onclick="uploadFile()" disabled>
+        <span class="btn-icon">⬆</span>
+        <span class="spinner"></span>
+        Traiter ce fichier
+      </button>
+    </div>
+
+    <!-- Configuration -->
+    <div class="panel">
+      <h2>Configuration</h2>
+      <div id="health-details">
+        <div class="config-item"><span class="key">SQL Server</span><span class="val" id="cfg-sql">...</span></div>
+        <div class="config-item"><span class="key">Dossier /Docs/</span><span class="val" id="cfg-docs">...</span></div>
+        <div class="config-item"><span class="key">OCR (Tesseract)</span><span class="val" id="cfg-ocr">...</span></div>
+        <div class="config-item"><span class="key">Dossier entrée</span><span class="val" id="cfg-input">...</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Right Panel ── -->
+  <div class="right-panel">
+
+    <div class="terminal-header">
+      <div class="terminal-dot" style="background:#ff5f57"></div>
+      <div class="terminal-dot" style="background:#febc2e"></div>
+      <div class="terminal-dot" style="background:#28c840"></div>
+      <span class="terminal-title">Terminal — Logs en temps réel</span>
+      <div class="terminal-actions">
+        <button class="terminal-btn" onclick="clearLogs()">Effacer</button>
+        <button class="terminal-btn" id="autoscroll-btn" onclick="toggleAutoScroll()">Auto-scroll ✓</button>
+      </div>
+    </div>
+
+    <div id="log-terminal"></div>
+
+    <!-- Results Table -->
+    <div class="results-section">
+      <div class="results-header">
+        <span>Résultats du lot</span>
+        <span id="batch-id-label">—</span>
+      </div>
+      <div style="max-height:200px;overflow-y:auto;">
+        <table id="results-table">
+          <thead>
+            <tr>
+              <th>Fichier</th>
+              <th>Numéro extrait</th>
+              <th>Type</th>
+              <th>RecordID</th>
+              <th>Statut</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody id="results-body">
+            <tr><td colspan="6" style="color:var(--text-muted);text-align:center;padding:16px;">
+              Aucun traitement effectué
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  const API = 'http://localhost:5179';
+  let autoScroll = true;
+  let selectedFile = null;
+
+  // ── SignalR ─────────────────────────────────────────────────────────
+  const conn = new signalR.HubConnectionBuilder()
+    .withUrl(`${API}/hubs/logs`)
+    .withAutomaticReconnect()
+    .build();
+
+  conn.on('ReceiveLog', (level, message, ts) => appendLog(level, message, ts));
+
+  conn.onreconnecting(() => appendLog('WRN', 'Reconnexion au serveur...', now()));
+  conn.onreconnected(() => appendLog('INF', 'Reconnecté.', now()));
+  conn.onclose(() => appendLog('ERR', 'Connexion perdue.', now()));
+
+  conn.start()
+    .then(() => appendLog('INF', 'Terminal connecté au serveur.', now()))
+    .catch(e => appendLog('ERR', 'Impossible de se connecter : ' + e, now()));
+
+  // ── Log terminal ────────────────────────────────────────────────────
+  function appendLog(level, message, ts) {
+    const term = document.getElementById('log-terminal');
+    const line = document.createElement('div');
+    line.className = 'log-line ' + level;
+
+    // Extra classes for visual emphasis
+    if (message.includes('✓ Rattaché') || message.includes('Rattach')) line.classList.add('success');
+    if (message.includes('╔') || message.includes('║') || message.includes('╚')) line.classList.add('summary');
+    if (message.includes('===')) line.classList.add('sep');
+
+    line.innerHTML = `
+      <span class="log-ts">${ts}</span>
+      <span class="log-lvl">${level}</span>
+      <span class="log-msg">${escHtml(message)}</span>`;
+    term.appendChild(line);
+
+    if (autoScroll) term.scrollTop = term.scrollHeight;
+  }
+
+  function clearLogs() {
+    document.getElementById('log-terminal').innerHTML = '';
+    appendLog('INF', 'Terminal effacé.', now());
+  }
+
+  function toggleAutoScroll() {
+    autoScroll = !autoScroll;
+    document.getElementById('autoscroll-btn').textContent =
+      'Auto-scroll ' + (autoScroll ? '✓' : '✗');
+  }
+
+  // ── Batch run ───────────────────────────────────────────────────────
+  async function runBatch() {
+    const btn = document.getElementById('btn-run');
+    btn.disabled = true;
+    btn.classList.add('loading');
+    appendLog('INF', '→ Déclenchement du traitement par lot...', now());
+
+    try {
+      const res = await fetch(`${API}/api/ingestion/run`, { method: 'POST' });
+      const data = await res.json();
+      updateStats(data);
+      updateTable(data);
+      document.getElementById('batch-id-label').textContent = data.batchId;
+    } catch (e) {
+      appendLog('ERR', 'Erreur appel API : ' + e.message, now());
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+    }
+  }
+
+  // ── File upload ─────────────────────────────────────────────────────
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('drop-zone').classList.remove('drag');
+    const f = e.dataTransfer.files[0];
+    if (f && f.name.endsWith('.pdf')) setFile(f);
+  }
+
+  function handleFileSelect(e) {
+    if (e.target.files[0]) setFile(e.target.files[0]);
+  }
+
+  function setFile(f) {
+    selectedFile = f;
+    document.getElementById('upload-name').textContent = f.name;
+    document.getElementById('btn-upload').disabled = false;
+  }
+
+  async function uploadFile() {
+    if (!selectedFile) return;
+    const btn = document.getElementById('btn-upload');
+    btn.disabled = true;
+    btn.classList.add('loading');
+    appendLog('INF', `→ Traitement du fichier : ${selectedFile.name}`, now());
+
+    try {
+      const form = new FormData();
+      form.append('file', selectedFile);
+      const res = await fetch(`${API}/api/ingestion/file`, { method: 'POST', body: form });
+      const data = await res.json();
+      updateTableSingle(data);
+      appendLog(data.statut === 'rattache' ? 'INF' : 'WRN',
+        `Résultat : ${data.statut} — ${data.message || ''}`, now());
+    } catch (e) {
+      appendLog('ERR', 'Erreur upload : ' + e.message, now());
+    } finally {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  }
+
+  // ── Stats + Table ───────────────────────────────────────────────────
+  function updateStats(d) {
+    document.getElementById('s-total').textContent     = d.total;
+    document.getElementById('s-rattaches').textContent = d.rattaches;
+    document.getElementById('s-doublons').textContent  = d.doublons;
+    document.getElementById('s-averifier').textContent = d.aVerifier;
+    document.getElementById('s-erreurs').textContent   = (d.erreurs || []).filter(e => e.statut === 'erreur').length;
+  }
+
+  function updateTable(data) {
+    const rows = (data.erreurs || []).map(rowHtml);
+    document.getElementById('results-body').innerHTML =
+      rows.length ? rows.join('') :
+      '<tr><td colspan="6" style="color:var(--text-muted);text-align:center;padding:16px;">Aucun fichier traité</td></tr>';
+  }
+
+  function updateTableSingle(d) {
+    const tbody = document.getElementById('results-body');
+    const existing = tbody.querySelector('[data-empty]');
+    if (existing) tbody.innerHTML = '';
+    tbody.insertAdjacentHTML('afterbegin', rowHtml(d));
+  }
+
+  function rowHtml(d) {
+    return `<tr>
+      <td style="font-family:monospace;font-size:11px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(d.fileName)}">${escHtml(d.fileName)}</td>
+      <td style="font-family:monospace;color:var(--cyan)">${d.numeroExtrait || '—'}</td>
+      <td>${d.typeDetecte || '—'}</td>
+      <td style="color:var(--blue)">${d.recordId || '—'}</td>
+      <td><span class="badge ${d.statut}">${d.statut}</span></td>
+      <td style="color:var(--text-muted);font-size:11px">${escHtml(d.message || '')}</td>
+    </tr>`;
+  }
+
+  // ── Health check ────────────────────────────────────────────────────
+  async function checkHealth() {
+    try {
+      const res = await fetch(`${API}/api/health`);
+      const data = await res.json();
+
+      const dot = document.getElementById('health-dot');
+      const allOk = Object.values(data).every(v => v.ok !== false);
+      dot.className = allOk ? 'ok' : 'err';
+      document.getElementById('health-label').textContent = allOk ? 'Système opérationnel' : 'Problème détecté';
+
+      setCheck('cfg-sql',   data.sql?.ok,       data.sql?.error || data.sql?.database || '');
+      setCheck('cfg-docs',  data.docsFolder?.ok, data.docsFolder?.error || data.docsFolder?.path || '');
+      setCheck('cfg-ocr',   data.ocr?.ok,        data.ocr?.languages || (data.ocr?.ok ? '' : 'Tesseract non dispo'));
+      setCheck('cfg-input', data.inputFolder?.ok, data.inputFolder?.path || '');
+    } catch {
+      document.getElementById('health-dot').className = 'err';
+      document.getElementById('health-label').textContent = 'API inaccessible';
+    }
+  }
+
+  function setCheck(id, ok, text) {
+    const el = document.getElementById(id);
+    el.textContent = ok ? (text || 'OK') : (text || 'Erreur');
+    el.className = 'val ' + (ok ? 'ok' : 'err');
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────
+  function now() { return new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit', second:'2-digit' }); }
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // ── Init ─────────────────────────────────────────────────────────────
+  checkHealth();
+  setInterval(checkHealth, 300000); // refresh health toutes les 5 min
+</script>
+</body>
+</html>
