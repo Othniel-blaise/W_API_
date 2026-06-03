@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="W_API.Api/W_API.Api.csproj" />
+  <Project Path="W_API.Core/W_API.Core.csproj" />
+  <Project Path="W_API.Infrastructure/W_API.Infrastructure.csproj" />
+  <Project Path="W_API.Tests/W_API.Tests.csproj" />
+</Solution>
